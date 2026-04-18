@@ -1,7 +1,7 @@
 ---
 # Docker images — sesuaikan dengan DOCKERHUB_USERNAME kamu
-frontend_image: "<DOCKERHUB_USERNAME>/ticketing-frontend:1.0.0"
-backend_image:  "<DOCKERHUB_USERNAME>/ticketing-backend:1.0.0"
+frontend_image: "lushien/ticketing-frontend:1.0.0"
+backend_image:  "lushien/ticketing-backend:1.0.0"
 
 # Container ports
 frontend_port: 3000

@@ -1,5 +1,5 @@
 # ─── Stage 1: Builder ─────────────────────────────────────
-FROM python:3.14-slim AS builder
+FROM python:3.12-slim AS builder
 WORKDIR /app
 
 # Install build dependencies
@@ -11,7 +11,7 @@ RUN pip install --no-cache-dir --upgrade pip \
     && pip install --no-cache-dir -r requirements.txt
 
 # ─── Stage 2: Production ──────────────────────────────────
-FROM python:3.14-slim AS production
+FROM python:3.12-slim AS production
 WORKDIR /app
 
 # Buat user non-root + patch CVE OS (tanpa curl agar OS lebih bersih dari CVE)

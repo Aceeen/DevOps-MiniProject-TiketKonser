@@ -17,9 +17,9 @@ variable "project_name" {
 }
 
 variable "vm_size" {
-  description = "Azure VM size for all nodes"
+  description = "Azure VM size for all nodes (must be 1-vCPU for 6-vCPU quota)"
   type        = string
-  default     = "Standard_B2s"
+  default     = "Standard_DS1_v2"
 }
 
 variable "admin_username" {
