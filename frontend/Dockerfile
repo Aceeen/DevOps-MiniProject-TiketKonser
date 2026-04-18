@@ -17,9 +17,13 @@ FROM nginx:1.30-alpine-slim AS production
 RUN apk update && apk upgrade --no-cache && \
     addgroup -g 1001 appgroup && \
     adduser -u 1001 -G appgroup -s /bin/sh -D appuser && \
-    # Pindahkan nginx PID ke /tmp (writable oleh semua user)
-    # /var/run di Alpine adalah symlink ke /run yang milik root
-    sed -i 's|pid\s*/var/run/nginx.pid;|pid /tmp/nginx.pid;|' /etc/nginx/nginx.conf && \
+    # Fix permissions for non-root execution (Alpine Nginx)
+    # 1. Hapus semua directive pid yang ada untuk menghindari duplikasi
+    # 2. Set PID file ke /tmp (writable oleh non-root)
+    sed -i '/pid/d' /etc/nginx/nginx.conf && \
+    echo "pid /tmp/nginx.pid;" > /tmp/nginx_new.conf && \
+    cat /etc/nginx/nginx.conf >> /tmp/nginx_new.conf && \
+    mv /tmp/nginx_new.conf /etc/nginx/nginx.conf && \
     # Hapus directive 'user' karena kita tidak jalan sebagai root
     sed -i '/^user /d' /etc/nginx/nginx.conf && \
     # Siapkan direktori yang perlu ditulis nginx
