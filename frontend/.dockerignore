@@ -1,0 +1,17 @@
+node_modules/
+dist/
+build/
+.next/
+.git/
+.gitignore
+.env
+.env.*
+*.log
+.DS_Store
+Thumbs.db
+tests/
+coverage/
+*.test.*
+*.spec.*
+README.md
+docs/

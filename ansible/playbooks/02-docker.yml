@@ -1,0 +1,7 @@
+---
+- name: Install Docker Engine on all worker nodes
+  hosts: workers
+  become: true
+  tags: docker
+  roles:
+    - docker

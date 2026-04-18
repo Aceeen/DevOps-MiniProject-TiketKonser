@@ -1,0 +1,23 @@
+PRD_Infrastruktur_HA_TiketKonser.docx
+Runbook_SOP_Deployment_TiketKonser.docx
+TSD_Infrastruktur_HA_TiketKonser.docx
+
+PRD_Infrastruktur_HA_TiketKonser.docx.txt
+Runbook_SOP_Deployment_TiketKonser.docx.txt
+TSD_Infrastruktur_HA_TiketKonser.docx.txt
+
+terraform.exe
+
+# Terraform — jangan commit file ini
+terraform/.terraform/
+terraform/terraform.tfstate
+terraform/terraform.tfstate.backup
+terraform/terraform.tfvars
+terraform/tfplan
+terraform/.terraform.lock.hcl
+
+node_modules/
+frontend/node_modules/
+*.log
+.env
+__pycache__/

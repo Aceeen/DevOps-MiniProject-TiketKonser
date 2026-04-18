@@ -1,0 +1,7 @@
+---
+- name: Deploy frontend container on frontend worker nodes
+  hosts: frontend_workers
+  become: true
+  tags: frontend
+  roles:
+    - frontend

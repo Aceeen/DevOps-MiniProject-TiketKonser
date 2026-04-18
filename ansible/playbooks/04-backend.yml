@@ -1,0 +1,7 @@
+---
+- name: Deploy backend container on backend worker nodes
+  hosts: backend_workers
+  become: true
+  tags: backend
+  roles:
+    - backend

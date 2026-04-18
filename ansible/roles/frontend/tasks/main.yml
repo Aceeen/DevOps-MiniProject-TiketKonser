@@ -1,0 +1,33 @@
+---
+- name: Pull frontend Docker image
+  docker_image:
+    name: "{{ frontend_image }}"
+    source: pull
+    force_source: yes
+
+- name: Run frontend container
+  docker_container:
+    name: ticketing-frontend
+    image: "{{ frontend_image }}"
+    state: started
+    restart_policy: unless-stopped
+    ports:
+      - "{{ frontend_port }}:3000"
+    env:
+      APP_ENV: "production"
+    healthcheck:
+      test: ["CMD", "wget", "-q", "--spider", "http://localhost:3000"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+
+- name: Verify frontend container is running
+  docker_container_info:
+    name: ticketing-frontend
+  register: result
+
+- name: Assert frontend container is healthy
+  assert:
+    that: result.container.State.Status == 'running'
+    fail_msg: "Frontend container is NOT running on {{ inventory_hostname }}!"
+    success_msg: "Frontend container is running on {{ inventory_hostname }}"

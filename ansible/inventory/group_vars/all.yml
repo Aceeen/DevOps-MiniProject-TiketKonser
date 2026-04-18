@@ -1,0 +1,24 @@
+---
+# Docker images — sesuaikan dengan DOCKERHUB_USERNAME kamu
+frontend_image: "<DOCKERHUB_USERNAME>/ticketing-frontend:1.0.0"
+backend_image:  "<DOCKERHUB_USERNAME>/ticketing-backend:1.0.0"
+
+# Container ports
+frontend_port: 3000
+backend_port:  8080
+
+# Docker registry
+docker_registry: docker.io
+
+# Nginx Load Balancer algorithm
+# Gunakan 'least_conn' untuk Least Connections, atau hapus baris ini untuk Round Robin
+lb_algorithm: least_conn
+
+# Worker IPs — digunakan oleh template nginx.conf.j2
+frontend_workers:
+  - { name: wk01, ip: 10.0.1.10, port: 3000 }
+  - { name: wk02, ip: 10.0.1.11, port: 3000 }
+
+backend_workers:
+  - { name: wk03, ip: 10.0.1.20, port: 8080 }
+  - { name: wk04, ip: 10.0.1.21, port: 8080 }

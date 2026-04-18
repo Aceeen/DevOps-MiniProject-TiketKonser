@@ -1,0 +1,18 @@
+---
+# Master Playbook — mengorkestrasi seluruh konfigurasi
+# Jalankan: ansible-playbook playbooks/site.yml
+
+- name: Common setup for all VMs
+  import_playbook: 01-common.yml
+
+- name: Install Docker on all workers
+  import_playbook: 02-docker.yml
+
+- name: Deploy frontend containers
+  import_playbook: 03-frontend.yml
+
+- name: Deploy backend containers
+  import_playbook: 04-backend.yml
+
+- name: Configure Load Balancer
+  import_playbook: 05-loadbalancer.yml

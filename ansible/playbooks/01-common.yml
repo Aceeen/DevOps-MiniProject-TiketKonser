@@ -1,0 +1,7 @@
+---
+- name: Common setup — update system & configure firewall
+  hosts: all
+  become: true
+  tags: common
+  roles:
+    - common
