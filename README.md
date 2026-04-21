@@ -1,6 +1,6 @@
 # 🎟️ DevOps Mini Project: Timed High-Availability Ticketing System
 
-Sistem infrastruktur *High-Availability (HA)* untuk aplikasi pemesanan tiket konser, dirancang khusus untuk melewati parameter batasan sumber daya pada *Azure Student Subscription* dan diuji menggunakan metrik keandalan `k6`.
+Sistem infrastruktur *High-Availability (HA)* untuk aplikasi pemesanan tiket konser, diuji menggunakan metrik keandalan `k6`.
 
 Arsitektur aplikasi menggunakan:
 - **Frontend**: SPA Nginx, 2 Kontainer per Node
