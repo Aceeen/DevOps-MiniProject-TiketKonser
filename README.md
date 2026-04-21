@@ -8,6 +8,7 @@ Arsitektur aplikasi menggunakan:
 - **Infrastructure**: Terraform (Azure)
 - **Deployment**: Ansible (Docker, Load Balancing, UFW)
 
+![diagram](./diagram.svg)
 ---
 
 ## 📋 Pra-Syarat (Prerequisites)
