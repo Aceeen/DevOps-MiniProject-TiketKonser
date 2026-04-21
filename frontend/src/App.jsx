@@ -154,6 +154,11 @@ const GLOBAL_CSS = `
     50% { box-shadow: 0 0 40px rgba(124,58,237,0.7), 0 0 80px rgba(124,58,237,0.3); }
   }
 
+  @keyframes scan {
+    0% { transform: translateY(-100%); }
+    100% { transform: translateY(100%); }
+  }
+
   @keyframes gradient-shift {
     0% { background-position: 0% 50%; }
     50% { background-position: 100% 50%; }
@@ -226,7 +231,34 @@ const GLOBAL_CSS = `
   }
 
   .slide-up { animation: slide-up 0.5s ease forwards; }
+
 `
+
+function CyberLoader() {
+  return (
+    <div style={{
+      height: '100vh', width: '100vw', background: '#07071a',
+      display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center',
+      fontFamily: 'monospace', color: '#4f46e5', textAlign: 'center'
+    }}>
+      <div style={{ fontSize: '60px', marginBottom: '30px', filter: 'drop-shadow(0 0 15px #7c3aed)' }}>🎵</div>
+      <div style={{ width: '250px', height: '4px', background: 'rgba(255,255,255,0.05)', borderRadius: '10px', overflow: 'hidden', position: 'relative' }}>
+        <div style={{
+          position: 'absolute', height: '100%', background: 'linear-gradient(90deg, #7c3aed, #4f46e5)',
+          width: '50%', animation: 'shimmer 1.5s infinite ease-in-out'
+        }} />
+      </div>
+      <div style={{ marginTop: '25px', fontSize: '14px', letterSpacing: '4px', color: '#7c3aed', fontWeight: 'bold' }}>
+        SYSTEM BOOTING...
+      </div>
+      <div style={{ marginTop: '15px', fontSize: '11px', color: 'rgba(255,255,255,0.3)', lineHeight: '1.6' }}>
+        [ OK ] AZURE_SEA_REGION CONNECTED <br/>
+        [ OK ] LOAD_BALANCER_READY <br/>
+        [ OK ] WORKER_NODES_ACTIVE (WK-01..04)
+      </div>
+    </div>
+  )
+}
 
 /* ──────────────────────────────────────────────
    KOMPONEN: SYSTEM STATUS BAR
@@ -717,10 +749,18 @@ function InfraPanel({ status }) {
    APP UTAMA
 ────────────────────────────────────────────── */
 export default function App() {
+  const [loading, setLoading] = useState(true) // State baru untuk loading
   const [status, setStatus] = useState({ api: 'checking', node: null, latency: null })
   const [filter, setFilter] = useState('Semua')
   const [search, setSearch] = useState('')
 
+  // Efek untuk Loading Screen (Splash)
+  useEffect(() => {
+    const timer = setTimeout(() => setLoading(false), 2500)
+    return () => clearTimeout(timer)
+  }, [])
+
+  // Efek untuk Cek Status API (HA Status)
   const checkStatus = useCallback(async () => {
     const t0 = performance.now()
     try {
@@ -739,7 +779,7 @@ export default function App() {
     return () => clearInterval(interval)
   }, [checkStatus])
 
-  const categories = ['Semua', 'International', 'Nasional']
+  // Logic filter tetap sama
   const filtered = CONCERTS.filter(c => {
     const matchCat = filter === 'Semua' || c.category === filter
     const matchSearch = !search ||
@@ -748,19 +788,18 @@ export default function App() {
     return matchCat && matchSearch
   })
 
+  if (loading) return <CyberLoader />
+
   return (
     <>
-      {/* Inject global CSS */}
       <style>{GLOBAL_CSS}</style>
-
       <SystemStatusBar status={status} />
       <Navbar onSearch={setSearch} />
       <HeroSection />
-
-      {/* Main content */}
+      
       <main style={{ padding: '0 48px 80px' }}>
 
-        {/* Section header + filters */}
+        {/* --- BAGIAN YANG TADI TERLEWAT: JUDUL & FILTER --- */}
         <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: '32px', flexWrap: 'wrap', gap: '16px' }}>
           <div>
             <h2 style={{ fontFamily: 'Space Grotesk', fontSize: '2rem', fontWeight: 800, letterSpacing: '-0.02em', color: '#fff' }}>
@@ -771,13 +810,18 @@ export default function App() {
             </p>
           </div>
           <div style={{ display: 'flex', gap: '8px' }}>
-            {categories.map(cat => (
-              <button key={cat} className={`filter-btn ${filter === cat ? 'active' : ''}`} onClick={() => setFilter(cat)}>
+            {['Semua', 'International', 'Nasional'].map(cat => (
+              <button 
+                key={cat} 
+                className={`filter-btn ${filter === cat ? 'active' : ''}`} 
+                onClick={() => setFilter(cat)}
+              >
                 {cat}
               </button>
             ))}
           </div>
         </div>
+        {/* --- END OF JUDUL & FILTER --- */}
 
         {/* Concert Grid + Sidebar */}
         <div style={{ display: 'grid', gridTemplateColumns: '1fr 340px', gap: '32px', alignItems: 'start' }}>
@@ -853,3 +897,4 @@ export default function App() {
     </>
   )
 }
+
