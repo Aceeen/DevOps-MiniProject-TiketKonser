@@ -46,7 +46,7 @@ Sebelum Anda bisa mulai mendeploy infrastruktur ini, pastikan mesin / terminal W
    ```
 
 ### Tahap 2: Provisioning Infrastruktur (Terraform)
-Sistem ini dirancang untuk melakukan optimalisasi **3 VMs (1 Load Balancer, 1 Worker Frontend, 1 Worker Backend)** yang mana sangat cocok untuk menghindari error Quota Node Limit maksimum milik *Azure Student*. 
+Sistem ini dirancang untuk melakukan optimalisasi **3 VMs (1 Load Balancer, 1 Worker Frontend, 1 Worker Backend)**. 
 
 1. Konfigurasi kredensial Azure di `terraform/terraform.tfvars`:
    ```bash
@@ -83,7 +83,7 @@ Untuk keamanan komprehensif, Ansible akan mengkonfigurasi Nginx, Firewall UFW, d
 ## 🧪 Panduan Verifikasi & Pengujian
 
 ### 1. Tes Manual (User Experience)
-Kunjungi Alamat *Load Balancer Public* di Browser Anda (`http://<IP_TERRAFORM_TADI>`). Jika Anda bisa melihat *user interface* pemesanan tiket berjalan dengan mulus dan dapat menarik API Konser dari tabel backend, maka pemasangan *Full-Stack* Anda sukses!
+Kunjungi Alamat *Load Balancer Public* di Browser Anda (`http://<IP_TERRAFORM_TADI>`).
 
 ### 2. Tes Kinerja/Bottleneck (Stress Testing)
 Sistem HA ini dirancang untuk menghadapi ledakan *traffic* (Contoh: "War Ticket/Konser"). Pengujian dilakukan dengan perangkat `k6` secara 4 Tahap *(Smoke, Load, Stress, Spike)*.
