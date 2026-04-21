@@ -27,8 +27,7 @@ Sebelum Anda bisa mulai mendeploy infrastruktur ini, pastikan mesin / terminal W
 ### Tahap 1: Persiapan Repository & Kontainer
 1. **Clone Repository (Buka WSL)**
    ```bash
-   git clone <URL_GITHUB_ANDA>
-   cd MiniProject
+   git clone (https://github.com/Aceeen/DevOps-MiniProject-TiketKonser.git)
    ```
 
 2. **Build & Push Image Docker Anda**
