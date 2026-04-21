@@ -2,24 +2,13 @@
 FROM python:3.12-slim AS builder
 WORKDIR /app
 
-# Optional: enable lint during image build
-# Example: docker build --build-arg RUN_LINT=1 -t tiketkonser-backend ./backend
-ARG RUN_LINT=0
-
 # Install build dependencies
 RUN apt-get update && apt-get install -y --no-install-recommends \
     build-essential && rm -rf /var/lib/apt/lists/*
 
-COPY requirements.txt pyproject.toml .
+COPY requirements.txt .
 RUN pip install --no-cache-dir --upgrade pip \
     && pip install --no-cache-dir -r requirements.txt
-
-# Ruff is a dev tool; install and run only when RUN_LINT=1
-RUN if [ "$RUN_LINT" = "1" ]; then pip install --no-cache-dir ruff; fi
-
-# Copy source only for optional linting (production image still copies src separately)
-COPY ./src ./src
-RUN if [ "$RUN_LINT" = "1" ]; then ruff check ./src; fi
 
 # ─── Stage 2: Production ──────────────────────────────────
 FROM python:3.12-slim AS production
