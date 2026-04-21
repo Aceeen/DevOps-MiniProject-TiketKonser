@@ -12,8 +12,6 @@ output "worker_private_ips" {
   description = "Private IPs of all 4 worker nodes"
   value = {
     "wk-01-frontend" = try(azurerm_network_interface.workers[0].private_ip_address, "")
-    "wk-02-frontend" = try(azurerm_network_interface.workers[1].private_ip_address, "")
-    "wk-03-backend"  = try(azurerm_network_interface.workers[2].private_ip_address, "")
-    "wk-04-backend"  = try(azurerm_network_interface.workers[3].private_ip_address, "")
+    "wk-02-backend"  = try(azurerm_network_interface.workers[1].private_ip_address, "")
   }
 }

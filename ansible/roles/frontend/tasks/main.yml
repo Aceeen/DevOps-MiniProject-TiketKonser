@@ -5,14 +5,14 @@
     source: pull
     force_source: yes
 
-- name: Run frontend container
+- name: Run frontend container instances
   docker_container:
-    name: ticketing-frontend
+    name: "ticketing-frontend-{{ item }}"
     image: "{{ frontend_image }}"
     state: started
     restart_policy: unless-stopped
     ports:
-      - "{{ frontend_port }}:3000"
+      - "{{ frontend_port + item - 1 }}:3000"
     env:
       APP_ENV: "production"
     healthcheck:
@@ -20,14 +20,21 @@
       interval: 30s
       timeout: 10s
       retries: 3
+  loop:
+    - 1
+    - 2
 
-- name: Verify frontend container is running
+- name: Verify frontend containers are running
   docker_container_info:
-    name: ticketing-frontend
-  register: result
+    name: "ticketing-frontend-{{ item }}"
+  register: results
+  loop:
+    - 1
+    - 2
 
-- name: Assert frontend container is healthy
+- name: Assert frontend containers are healthy
   assert:
-    that: result.container.State.Status == 'running'
+    that: item.container.State.Status == 'running'
     fail_msg: "Frontend container is NOT running on {{ inventory_hostname }}!"
     success_msg: "Frontend container is running on {{ inventory_hostname }}"
+  loop: "{{ results.results }}"

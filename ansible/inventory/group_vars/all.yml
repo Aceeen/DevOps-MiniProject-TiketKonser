@@ -14,11 +14,12 @@ docker_registry: docker.io
 # Gunakan 'least_conn' untuk Least Connections, atau hapus baris ini untuk Round Robin
 lb_algorithm: least_conn
 
-# Worker IPs — digunakan oleh template nginx.conf.j2
+# Worker targets — digunakan oleh template nginx.conf.j2
+# Karena kita pakai 3-VM architecture, kita spin up 2 kontainer di tiap VM pakai port berbeda
 frontend_workers:
-  - { name: wk01, ip: 10.0.1.10, port: 3000 }
-  - { name: wk02, ip: 10.0.1.11, port: 3000 }
+  - { name: wk01-c1, ip: 10.0.1.10, port: 3000 }
+  - { name: wk01-c2, ip: 10.0.1.10, port: 3001 }
 
 backend_workers:
-  - { name: wk03, ip: 10.0.1.20, port: 8080 }
-  - { name: wk04, ip: 10.0.1.21, port: 8080 }
+  - { name: wk02-c1, ip: 10.0.1.11, port: 8080 }
+  - { name: wk02-c2, ip: 10.0.1.11, port: 8081 }

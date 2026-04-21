@@ -62,7 +62,7 @@ resource "azurerm_linux_virtual_machine" "lb" {
 
 # Network Interface — Worker Nodes (private IP only, TANPA public IP)
 resource "azurerm_network_interface" "workers" {
-  count               = 4
+  count               = 2
   name                = "nic-worker-${count.index + 1}-${var.project_name}"
   location            = var.location
   resource_group_name = var.resource_group_name
@@ -71,14 +71,14 @@ resource "azurerm_network_interface" "workers" {
     name                          = "ipconfig-worker-${count.index + 1}"
     subnet_id                     = var.subnet_id
     private_ip_address_allocation = "Static"
-    # WK-01: 10.0.1.10, WK-02: 10.0.1.11, WK-03: 10.0.1.20, WK-04: 10.0.1.21
-    private_ip_address = count.index < 2 ? "10.0.1.${count.index + 10}" : "10.0.1.${count.index + 18}"
+    # WK-01 (Frontend): 10.0.1.10, WK-02 (Backend): 10.0.1.11
+    private_ip_address = "10.0.1.${count.index + 10}"
   }
 }
 
 # Virtual Machine — 4 Worker Nodes
 resource "azurerm_linux_virtual_machine" "workers" {
-  count               = 4
+  count               = 2
   name                = "vm-worker-${count.index + 1}-${var.project_name}"
   location            = var.location
   resource_group_name = var.resource_group_name
@@ -106,7 +106,7 @@ resource "azurerm_linux_virtual_machine" "workers" {
   }
 
   tags = {
-    Role    = count.index < 2 ? "frontend" : "backend"
+    Role    = count.index == 0 ? "frontend" : "backend"
     Project = var.project_name
   }
 }

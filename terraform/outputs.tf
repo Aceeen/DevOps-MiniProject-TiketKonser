@@ -10,10 +10,5 @@ output "lb_private_ip" {
 
 output "worker_private_ips" {
   description = "Private IPs of all worker nodes"
-  value = {
-    "wk-01-frontend" = "10.0.1.10"
-    "wk-02-frontend" = "10.0.1.11"
-    "wk-03-backend"  = "10.0.1.20"
-    "wk-04-backend"  = "10.0.1.21"
-  }
+  value       = module.vm.worker_private_ips
 }

@@ -5,14 +5,14 @@
     source: pull
     force_source: yes
 
-- name: Run backend container
+- name: Run backend container instances
   docker_container:
-    name: ticketing-backend
+    name: "ticketing-backend-{{ item }}"
     image: "{{ backend_image }}"
     state: started
     restart_policy: unless-stopped
     ports:
-      - "{{ backend_port }}:8080"
+      - "{{ backend_port + item - 1 }}:8080"
     env:
       APP_ENV: "production"
       PORT: "8080"
@@ -21,14 +21,21 @@
       interval: 30s
       timeout: 10s
       retries: 3
+  loop:
+    - 1
+    - 2
 
-- name: Verify backend container is running
+- name: Verify backend containers are running
   docker_container_info:
-    name: ticketing-backend
-  register: result
+    name: "ticketing-backend-{{ item }}"
+  register: results
+  loop:
+    - 1
+    - 2
 
-- name: Assert backend container is healthy
+- name: Assert backend containers are healthy
   assert:
-    that: result.container.State.Status == 'running'
+    that: item.container.State.Status == 'running'
     fail_msg: "Backend container is NOT running on {{ inventory_hostname }}!"
     success_msg: "Backend container is running on {{ inventory_hostname }}"
+  loop: "{{ results.results }}"
