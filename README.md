@@ -1,4 +1,16 @@
-# 🎟️ DevOps Mini Project: Timed High-Availability Ticketing System
+# DevOps Mini Project: Timed High-Availability Ticketing System
+
+## Anggota Kelompok
+
+| NIM | Nama |
+| --- | --- |
+| 5027221061 | HAFIZ AKMALDI SANTOSA |
+| 5027231009 | DAFFA RAJENDRA PRIYATAMA |
+| 5027231020 | ACINTYA EDRIA SUDARSONO |
+| 5027231038 | DANI WAHYU ANAK ARY |
+| 5027231060 | CALLISTA MEYRA AZIZAH |
+| 5027231075 | NISRINA ATIQAH DWIPUTRI RIDZKI |
+| 5027231088 | VERI RAHMAN |
 
 Sistem infrastruktur *High-Availability (HA)* untuk aplikasi pemesanan tiket konser, diuji menggunakan metrik keandalan `k6`.
 
