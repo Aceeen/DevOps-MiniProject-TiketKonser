@@ -474,8 +474,34 @@ function HeroSection() {
 ────────────────────────────────────────────── */
 function ConcertCard({ concert }) {
   const [hovered, setHovered] = useState(false)
+  const [buying, setBuying] = useState(false)
+  const [ticketState, setTicketState] = useState(null)
   const cheapest = concert.tiers.find(t => t.available)
   const allSoldOut = !cheapest
+
+  const handleBuy = async () => {
+    setBuying(true)
+    setTicketState(null)
+    try {
+      const res = await fetch('/api/tickets/reserve', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          concert_id: concert.id,
+          tier_name: cheapest.name,
+          buyer_name: 'John Doe',
+          buyer_email: 'john@example.com'
+        })
+      })
+      if (!res.ok) throw new Error('Reserve failed')
+      setTicketState('success')
+    } catch {
+      setTicketState('error')
+    } finally {
+      setBuying(false)
+      setTimeout(() => setTicketState(null), 3000)
+    }
+  }
 
   return (
     <div
@@ -596,17 +622,19 @@ function ConcertCard({ concert }) {
             )}
           </div>
 
-          <button className="btn-hover" disabled={allSoldOut} style={{
+          <button className="btn-hover" disabled={allSoldOut || buying} onClick={handleBuy} style={{
             padding: '12px 24px', borderRadius: '12px',
             background: allSoldOut
               ? 'rgba(255,255,255,0.05)'
+              : ticketState === 'success' ? '#22c55e'
+              : ticketState === 'error' ? '#ef4444'
               : `linear-gradient(135deg, ${concert.accent}30, ${concert.accent}15)`,
             border: `1px solid ${allSoldOut ? 'rgba(255,255,255,0.06)' : concert.accent + '50'}`,
-            color: allSoldOut ? 'rgba(255,255,255,0.25)' : concert.accent,
+            color: allSoldOut ? 'rgba(255,255,255,0.25)' : ticketState ? '#fff' : concert.accent,
             fontWeight: 700, fontSize: '14px', fontFamily: 'Inter',
-            cursor: allSoldOut ? 'not-allowed' : 'pointer',
+            cursor: allSoldOut || buying ? 'not-allowed' : 'pointer',
           }}>
-            {allSoldOut ? 'Sold Out' : 'Beli Tiket →'}
+            {buying ? 'Memproses...' : ticketState === 'success' ? 'Sukses!' : ticketState === 'error' ? 'Gagal' : allSoldOut ? 'Sold Out' : 'Beli Tiket →'}
           </button>
         </div>
       </div>
