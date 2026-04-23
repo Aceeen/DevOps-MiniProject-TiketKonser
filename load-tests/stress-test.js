@@ -55,7 +55,7 @@ export const options = {
   },
 };
 
-const BASE_URL = __ENV.LB_URL || 'http://4.194.67.9';
+const BASE_URL = __ENV.LB_URL || 'https://4.194.67.9';
 
 export default function () {
   // Test homepage (frontend)

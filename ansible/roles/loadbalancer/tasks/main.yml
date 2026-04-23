@@ -5,6 +5,24 @@
     state: present
     update_cache: yes
 
+- name: Create SSL directory
+  file:
+    path: /etc/nginx/ssl
+    state: directory
+    owner: root
+    group: root
+    mode: '0755'
+
+- name: Generate self-signed SSL certificate
+  command: >
+    openssl req -x509 -nodes -days 365 -newkey rsa:2048
+    -keyout /etc/nginx/ssl/nginx.key
+    -out /etc/nginx/ssl/nginx.crt
+    -subj "/C=ID/ST=Jakarta/L=Jakarta/O=TiketKonser/OU=DevOps/CN=4.194.67.9"
+  args:
+    creates: /etc/nginx/ssl/nginx.crt
+
+
 - name: Deploy Nginx configuration from template
   template:
     src: nginx.conf.j2

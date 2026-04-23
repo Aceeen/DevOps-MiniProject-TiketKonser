@@ -1,5 +1,4 @@
 ---
-# Master Playbook — mengorkestrasi seluruh konfigurasi
 # Jalankan: ansible-playbook playbooks/site.yml
 
 - name: Common setup for all VMs

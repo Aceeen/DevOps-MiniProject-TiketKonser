@@ -80,6 +80,18 @@ Untuk keamanan komprehensif, Ansible akan mengkonfigurasi Nginx, Firewall UFW, d
 
 ---
 
+## 🔒 Keamanan & HTTPS (SSL)
+Sistem ini telah dikonfigurasi untuk menggunakan **HTTPS (Port 443)** guna mengamankan data transaksi tiket.
+1. **Self-Signed Certificate**: Ansible secara otomatis membuat sertifikat SSL mandiri di direktori `/etc/nginx/ssl/` pada Load Balancer.
+2. **Auto-Redirect**: Semua trafik HTTP (Port 80) akan otomatis dialihkan ke HTTPS (Port 443).
+3. **Catatan Testing**: Karena menggunakan sertifikat mandiri (self-signed), browser akan menampilkan peringatan keamanan. Anda dapat memilih "Advanced -> Proceed" untuk melanjutkan.
+4. **Load Testing (k6)**: Saat menjalankan k6, gunakan flag berikut untuk mengabaikan verifikasi SSL:
+   ```bash
+   k6 run --insecure-skip-tls-verify stress-test.js
+   ```
+
+---
+
 ## 🧪 Panduan Verifikasi & Pengujian
 
 ### 1. Tes Manual (User Experience)
