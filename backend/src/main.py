@@ -24,7 +24,7 @@ from datetime import datetime, timezone
 from fastapi import FastAPI, HTTPException, Request, status
 from fastapi.middleware.cors import CORSMiddleware
 from fastapi.responses import JSONResponse
-from pydantic import BaseModel, EmailStr, Field
+from pydantic import BaseModel, Field
 
 from src import data as db
 
@@ -41,11 +41,21 @@ logger = logging.getLogger("tiketkonser")
 # ──────────────────────────────────────────
 # APP CONFIG
 # ──────────────────────────────────────────
-APP_ENV  = os.getenv("APP_ENV", "production")
-APP_NAME = "TiketKonser Backend"
-VERSION  = "1.0.0"
+
+def _env_csv(name: str, default: str) -> list[str]:
+    value = os.getenv(name, default)
+    return [v.strip() for v in value.split(",") if v.strip()]
+
+
+APP_ENV = os.getenv("APP_ENV", "production")
+APP_NAME = os.getenv("APP_NAME", "TiketKonser Backend")
+VERSION = os.getenv("APP_VERSION", "1.0.0")
 HOSTNAME = socket.gethostname()
 START_TIME = time.time()
+
+CORS_ALLOW_ORIGINS = _env_csv("CORS_ALLOW_ORIGINS", "*")
+CORS_ALLOW_METHODS = _env_csv("CORS_ALLOW_METHODS", "GET,POST")
+CORS_ALLOW_HEADERS = _env_csv("CORS_ALLOW_HEADERS", "*")
 
 # ──────────────────────────────────────────
 # LIFESPAN (startup / shutdown hooks)
@@ -78,10 +88,10 @@ app = FastAPI(
 # CORS — allow frontend to call the API
 app.add_middleware(
     CORSMiddleware,
-    allow_origins=["*"],
+    allow_origins=CORS_ALLOW_ORIGINS,
     allow_credentials=False,
-    allow_methods=["GET", "POST"],
-    allow_headers=["*"],
+    allow_methods=CORS_ALLOW_METHODS,
+    allow_headers=CORS_ALLOW_HEADERS,
 )
 
 # ──────────────────────────────────────────
@@ -316,11 +326,17 @@ async def get_metrics():
     Each worker node tracks its own request count.
     Compare counts across WK-01..WK-04 to verify even distribution.
     """
-    import resource as _resource
     try:
-        mem_mb = _resource.getrusage(_resource.RUSAGE_SELF).ru_maxrss / 1024
-    except Exception:
-        mem_mb = -1
+        import resource as _resource  # type: ignore
+    except ModuleNotFoundError:
+        _resource = None
+
+    mem_mb = -1
+    if _resource is not None:
+        try:
+            mem_mb = _resource.getrusage(_resource.RUSAGE_SELF).ru_maxrss / 1024
+        except Exception:
+            mem_mb = -1
 
     return {
         "node": {
@@ -365,7 +381,7 @@ async def not_found_handler(request: Request, exc: HTTPException):
 # ── 500 HANDLER ──────────────────────────
 @app.exception_handler(500)
 async def internal_error_handler(request: Request, exc: Exception):
-    logger.error(f"Internal error on {request.url.path}: {exc}")
+    logger.exception("Internal error on %s", request.url.path)
     return JSONResponse(
         status_code=500,
         content={"error": "Internal Server Error", "served_by": HOSTNAME},

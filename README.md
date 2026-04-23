@@ -1,6 +1,18 @@
-# 🎟️ DevOps Mini Project: Timed High-Availability Ticketing System
+# DevOps Mini Project: Timed High-Availability Ticketing System
 
-Sistem infrastruktur *High-Availability (HA)* untuk aplikasi pemesanan tiket konser, dirancang khusus untuk melewati parameter batasan sumber daya pada *Azure Student Subscription* dan diuji menggunakan metrik keandalan `k6`.
+## Anggota Kelompok
+
+| NIM | Nama |
+| --- | --- |
+| 5027221061 | HAFIZ AKMALDI SANTOSA |
+| 5027231009 | DAFFA RAJENDRA PRIYATAMA |
+| 5027231020 | ACINTYA EDRIA SUDARSONO |
+| 5027231038 | DANI WAHYU ANAK ARY |
+| 5027231060 | CALLISTA MEYRA AZIZAH |
+| 5027231075 | NISRINA ATIQAH DWIPUTRI RIDZKI |
+| 5027231088 | VERI RAHMAN |
+
+Sistem infrastruktur *High-Availability (HA)* untuk aplikasi pemesanan tiket konser, diuji menggunakan metrik keandalan `k6`.
 
 Arsitektur aplikasi menggunakan:
 - **Frontend**: SPA Nginx, 2 Kontainer per Node
@@ -46,7 +58,7 @@ Sebelum Anda bisa mulai mendeploy infrastruktur ini, pastikan mesin / terminal W
    ```
 
 ### Tahap 2: Provisioning Infrastruktur (Terraform)
-Sistem ini dirancang untuk melakukan optimalisasi **3 VMs (1 Load Balancer, 1 Worker Frontend, 1 Worker Backend)** yang mana sangat cocok untuk menghindari error Quota Node Limit maksimum milik *Azure Student*. 
+Sistem ini dirancang untuk melakukan optimalisasi **3 VMs (1 Load Balancer, 1 Worker Frontend, 1 Worker Backend)**. 
 
 1. Konfigurasi kredensial Azure di `terraform/terraform.tfvars`:
    ```bash
@@ -95,7 +107,7 @@ Sistem ini telah dikonfigurasi untuk menggunakan **HTTPS (Port 443)** guna menga
 ## 🧪 Panduan Verifikasi & Pengujian
 
 ### 1. Tes Manual (User Experience)
-Kunjungi Alamat *Load Balancer Public* di Browser Anda (`http://<IP_TERRAFORM_TADI>`). Jika Anda bisa melihat *user interface* pemesanan tiket berjalan dengan mulus dan dapat menarik API Konser dari tabel backend, maka pemasangan *Full-Stack* Anda sukses!
+Kunjungi Alamat *Load Balancer Public* di Browser Anda (`http://<IP_TERRAFORM_TADI>`).
 
 ### 2. Tes Kinerja/Bottleneck (Stress Testing)
 Sistem HA ini dirancang untuk menghadapi ledakan *traffic* (Contoh: "War Ticket/Konser"). Pengujian dilakukan dengan perangkat `k6` secara 4 Tahap *(Smoke, Load, Stress, Spike)*.

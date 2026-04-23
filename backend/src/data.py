@@ -2,14 +2,17 @@
 TiketKonser Backend — Data layer
 In-memory data store (no external DB needed for this project)
 """
-from typing import Dict, List
 import threading
 import time
+from typing import Any
+
+Concert = dict[str, Any]
+Reservation = dict[str, Any]
 
 # ──────────────────────────────────────────
 # CONCERT DATA
 # ──────────────────────────────────────────
-CONCERTS: List[Dict] = [
+CONCERTS: list[Concert] = [
     {
         "id": 1,
         "artist": "Coldplay",
@@ -118,11 +121,11 @@ CONCERTS: List[Dict] = [
 # THREAD-SAFE TICKET RESERVATION STORE
 # ──────────────────────────────────────────
 _lock = threading.Lock()
-_reservations: List[Dict] = []
+_reservations: list[Reservation] = []
 _reservation_counter = 0
 
 
-def get_all_concerts() -> List[Dict]:
+def get_all_concerts() -> list[Concert]:
     """Return all concerts with availability calculated."""
     result = []
     for c in CONCERTS:
@@ -138,12 +141,12 @@ def get_all_concerts() -> List[Dict]:
     return result
 
 
-def get_concert_by_id(concert_id: int) -> Dict | None:
+def get_concert_by_id(concert_id: int) -> Concert | None:
     concerts = get_all_concerts()
     return next((c for c in concerts if c["id"] == concert_id), None)
 
 
-def reserve_ticket(concert_id: int, tier_name: str, buyer_name: str, buyer_email: str) -> Dict:
+def reserve_ticket(concert_id: int, tier_name: str, buyer_name: str, buyer_email: str) -> dict[str, Any]:
     """Thread-safe ticket reservation."""
     global _reservation_counter
 
@@ -183,7 +186,7 @@ def reserve_ticket(concert_id: int, tier_name: str, buyer_name: str, buyer_email
     return {"success": True, "reservation": reservation}
 
 
-def get_stats() -> Dict:
+def get_stats() -> dict[str, Any]:
     """Return aggregate stats for monitoring."""
     total_sold = sum(
         tier["sold"]
